@@ -5,13 +5,14 @@ import { useRouter } from "next/navigation";
 import { ApiService } from "@/api/apiService";
 import type { ApplicationError } from "@/types/error";
 
-type LoginRequest = {
+type RegistrationRequest = {
   username: string;
   password: string;
+  bio: string;
+  name: string;
 };
 
-
-type LoginResponse = {
+type RegistrationResponse = {
   token: string;
   id: number;
   username: string;
@@ -20,35 +21,41 @@ type LoginResponse = {
   name: string;
 };
 
-
-export default function LoginPage() {
+export default function RegistrationPage() {
   const router = useRouter();
   const api = new ApiService();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [bio, setBio] = useState("");
+  const [name, setName] = useState("");
   const [error, setError] = useState<string | null>(null);
 
-  async function handleLogin() {
+  async function handleRegistration() {
     setError(null);
 
     try {
-      const payload: LoginRequest = { username, password };
+      const payload: RegistrationRequest = {
+        username,
+        password,
+        bio,
+        name,
+      };
 
-      const data = await api.post<LoginResponse>("/login", payload);
+      const data = await api.post<RegistrationResponse>("/users", payload);
+
       localStorage.setItem("token", data.token);
 
       router.push("/profile");
     } catch (err) {
       const appErr = err as ApplicationError;
-
-      setError(appErr?.message ?? "Login failed.");
+      setError(appErr?.message ?? "Registration failed.");
     }
   }
 
   return (
     <div>
-      <h1>Login</h1>
+      <h1>Register</h1>
 
       {error && <p style={{ color: "red" }}>{error}</p>}
 
@@ -65,7 +72,19 @@ export default function LoginPage() {
         onChange={(e) => setPassword(e.target.value)}
       />
 
-      <button onClick={handleLogin}>Login</button>
+      <input
+        placeholder="Name"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+      />
+
+      <input
+        placeholder="Bio"
+        value={bio}
+        onChange={(e) => setBio(e.target.value)}
+      />
+
+      <button onClick={handleRegistration}>Register</button>
     </div>
   );
 }
