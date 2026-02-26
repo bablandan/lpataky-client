@@ -2,9 +2,28 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { ApiService } from "@/api/apiService";
+import type { ApplicationError } from "@/types/error";
+
+type LoginRequest = {
+  username: string;
+  password: string;
+};
+
+
+type LoginResponse = {
+  token: string;
+  id: number;
+  username: string;
+  bio: string;
+  creationDate: string;
+  name: string;
+};
+
 
 export default function LoginPage() {
   const router = useRouter();
+  const api = new ApiService();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -13,24 +32,17 @@ export default function LoginPage() {
   async function handleLogin() {
     setError(null);
 
-    const res = await fetch("/api/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username,
-        password,
-      }),
-    });
+    try {
+      const payload: LoginRequest = { username, password };
 
-    if (!res.ok) {
-      const text = await res.text().catch(() => "");
-      setError(text || `Login failed (HTTP ${res.status})`);
-      return;
+      await api.post<LoginResponse>("/login", payload);
+
+      router.push("/profile");
+    } catch (err) {
+      const appErr = err as ApplicationError;
+
+      setError(appErr?.message ?? "Login failed.");
     }
-
-    router.push("/profile");
   }
 
   return (
