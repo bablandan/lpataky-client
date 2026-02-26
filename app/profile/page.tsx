@@ -1,3 +1,5 @@
+"import client"
+
 export default function ProfilePage() {
   return (
     <div>
@@ -6,4 +8,3 @@ export default function ProfilePage() {
     </div>
   );
 }
-
