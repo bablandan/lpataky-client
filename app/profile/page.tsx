@@ -1,10 +1,16 @@
-"use client"
+"use client";
 
 export default function ProfilePage() {
   return (
-    <div className="flex flex-col items-center justify-center h-screen">
-      <h1 className="text-5xl font-bold mb-6">Profile</h1>
-      <p className="text-8xl font-extrabold text-green-600">
+    <div style={{ textAlign: "center", marginTop: "200px" }}>
+      <h1>Profile</h1>
+      <p
+        style={{
+          fontSize: "80px",
+          fontWeight: "bold",
+          color: "black",
+        }}
+      >
         You are logged in.
       </p>
     </div>
