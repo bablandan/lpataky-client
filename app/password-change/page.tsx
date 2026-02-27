@@ -24,7 +24,7 @@ export default function ChangePasswordPage() {
         newPassword: password
       };
       const userId = localStorage.getItem("userId");
-      await api.put<void>("/users/${userId}", payload);
+      await api.put<void>(`/users/${userId}`, payload);
       localStorage.removeItem("token");
       router.push("/login"); 
     } catch(err) {
