@@ -13,6 +13,19 @@ export class ApiService {
     };
   }
 
+  private getToken(): string|null{
+    if (typeof window == "undefined") return null;
+    return localStorage.getItem("token")
+  }
+
+  private buildHeaders(): HeadersInit {
+  const token = this.getToken();
+  return {
+    ...this.defaultHeaders,
+    ...(token ? { Authorization: token } : {}),
+  };
+}
+
   /**
    * Helper function to check the response, parse JSON,
    * and throw an error if the response is not OK.
@@ -64,7 +77,7 @@ export class ApiService {
     const url = `${this.baseURL}${endpoint}`;
     const res = await fetch(url, {
       method: "GET",
-      headers: this.defaultHeaders,
+      headers: this.buildHeaders(),
     });
     return this.processResponse<T>(
       res,
@@ -82,7 +95,7 @@ export class ApiService {
     const url = `${this.baseURL}${endpoint}`;
     const res = await fetch(url, {
       method: "POST",
-      headers: this.defaultHeaders,
+      headers: this.buildHeaders(),
       body: JSON.stringify(data),
     });
     return this.processResponse<T>(
@@ -97,12 +110,12 @@ export class ApiService {
    * @param data - The payload to update.
    * @returns JSON data of type T.
    */
-  public async put<T>(endpoint: string, data: unknown): Promise<T> {
+  public async put<T>(endpoint: string, data?: unknown): Promise<T> {
     const url = `${this.baseURL}${endpoint}`;
     const res = await fetch(url, {
       method: "PUT",
-      headers: this.defaultHeaders,
-      body: JSON.stringify(data),
+      headers: this.buildHeaders(),
+      body: data === undefined ? undefined : JSON.stringify(data),
     });
     return this.processResponse<T>(
       res,
@@ -119,7 +132,7 @@ export class ApiService {
     const url = `${this.baseURL}${endpoint}`;
     const res = await fetch(url, {
       method: "DELETE",
-      headers: this.defaultHeaders,
+      headers: this.buildHeaders(),
     });
     return this.processResponse<T>(
       res,
