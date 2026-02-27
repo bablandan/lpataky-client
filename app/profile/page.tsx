@@ -23,6 +23,10 @@ export default function ProfilePage() {
     
   }
 
+  async function handlePasswordChange(){
+    router.push("/password-change")
+  }
+
   return (
     <div style={{ textAlign: "center", marginTop: "200px" }}>
       <h1>Profile</h1>
@@ -37,6 +41,7 @@ export default function ProfilePage() {
       </p>
 
       <button onClick={handleLogout}>Logout</button>
+      <button onClick={handlePasswordChange}>Change Password</button>
     </div>
   );
 }
