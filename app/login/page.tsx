@@ -37,6 +37,7 @@ export default function LoginPage() {
 
       const data = await api.post<LoginResponse>("/login", payload);
       localStorage.setItem("token", data.token);
+      localStorage.setItem("userId", String(data.id));
 
       router.push("/profile");
     } catch (err) {

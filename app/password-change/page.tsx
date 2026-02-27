@@ -23,8 +23,8 @@ export default function ChangePasswordPage() {
       const payload = {
         newPassword: password
       };
-
-      await api.put<void>("/change-password", payload);
+      const userId = localStorage.getItem("userId");
+      await api.put<void>("/users/${userId}", payload);
       localStorage.removeItem("token");
       router.push("/login"); 
     } catch(err) {

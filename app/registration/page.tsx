@@ -45,6 +45,7 @@ export default function RegistrationPage() {
       const data = await api.post<RegistrationResponse>("/users", payload);
 
       localStorage.setItem("token", data.token);
+      localStorage.setItem("userId", String(data.id));
 
       router.push("/profile");
     } catch (err) {
