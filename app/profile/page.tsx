@@ -24,7 +24,11 @@ export default function ProfilePage() {
   }
 
   async function handlePasswordChange(){
-    router.push("/password-change")
+    router.push("/password-change");
+  }
+
+  async function handleUserProfiles(){
+    router.push("/users");
   }
 
   return (
@@ -42,6 +46,7 @@ export default function ProfilePage() {
 
       <button onClick={handleLogout}>Logout</button>
       <button onClick={handlePasswordChange}>Change Password</button>
+      <button onClick={handleUserProfiles}>User profiles</button>
     </div>
   );
 }

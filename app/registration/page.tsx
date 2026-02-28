@@ -29,7 +29,7 @@ export default function RegistrationPage() {
   const [password, setPassword] = useState("");
   const [bio, setBio] = useState("");
   const [name, setName] = useState("");
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<String | null>(null);
 
   async function handleRegistration() {
     setError(null);
