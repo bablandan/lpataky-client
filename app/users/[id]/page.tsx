@@ -28,7 +28,7 @@ const Profile: React.FC = () => {
 
     const fetchUser = async () => {
       try {
-        const user = await apiService.get<User>(`/users/${id}`);
+        const user = await apiService.get<User>(`/users?userId=${id}`);
         setUser(user);
         console.log("Fetched user:", user);
       } catch (error) {
@@ -41,7 +41,7 @@ const Profile: React.FC = () => {
     };
 
     fetchUser();
-  }, [apiService]);  
+  }, [apiService, params?.id]);  
 
   return (
     <div className="card-container" style={{ padding: 24 }}>
