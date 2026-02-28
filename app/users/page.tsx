@@ -4,6 +4,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { ApiService } from "@/api/apiService";
 import { useApi } from "@/hooks/useApi";
 import useLocalStorage from "@/hooks/useLocalStorage";
 import { User } from "@/types/user";
@@ -34,7 +35,9 @@ const columns: TableProps<User>["columns"] = [
 const Dashboard: React.FC = () => {
   const router = useRouter();
   const apiService = useApi();
+  const api = new ApiService();
   const [users, setUsers] = useState<User[] | null>(null);
+  const [error, setError] = useState<string | null>(null);
   // useLocalStorage hook example use
   // The hook returns an object with the value and two functions
   // Simply choose what you need from the hook:
@@ -44,11 +47,17 @@ const Dashboard: React.FC = () => {
     clear: clearToken, // all we need in this scenario is a method to clear the token
   } = useLocalStorage<string>("token", ""); // if you wanted to select a different token, i.e "lobby", useLocalStorage<string>("lobby", "");
 
-  const handleLogout = (): void => {
-    // Clear token using the returned function 'clear' from the hook
-    clearToken();
-    router.push("/login");
-  };
+  async function handleLogout(){
+    setError(null);
+
+    try {
+      await api.put<void>("/logout");
+      localStorage.removeItem("token");
+      router.push("/login"); 
+    } catch(err) {
+      setError("Logout failed");
+    }
+  }
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -66,12 +75,20 @@ const Dashboard: React.FC = () => {
         }
       }
     };
-
     fetchUsers();
   }, [apiService]); // dependency apiService does not re-trigger the useEffect on every render because the hook uses memoization (check useApi.tsx in the hooks).
   // if the dependency array is left empty, the useEffect will trigger exactly once
   // if the dependency array is left away, the useEffect will run on every state change. Since we do a state change to users in the useEffect, this results in an infinite loop.
   // read more here: https://react.dev/reference/react/useEffect#specifying-reactive-dependencies
+
+  //Frontend authentication
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      router.replace("/login");
+    }
+  }, [router]);
+
 
   return (
     <div className="card-container">

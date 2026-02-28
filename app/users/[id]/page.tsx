@@ -43,6 +43,15 @@ const Profile: React.FC = () => {
     fetchUser();
   }, [apiService, params?.id]);  
 
+  //Frontend authentication
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      router.replace("/login");
+    }
+  }, [router]);
+
+
   return (
     <div className="card-container" style={{ padding: 24 }}>
       <Button onClick={() => router.push("/users")} style={{ marginBottom: 16 }}>

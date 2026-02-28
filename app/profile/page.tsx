@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { ApiService } from "@/api/apiService";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { ApplicationError } from "@/types/error";
 
 export default function ProfilePage() {
@@ -10,6 +10,15 @@ export default function ProfilePage() {
   const api = new ApiService();
   const [error, setError] = useState<string | null>(null);
 
+  //Frontend authentication
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      router.replace("/login");
+    }
+  }, [router]);
+
+  
   async function handleLogout(){
     setError(null);
 
@@ -20,7 +29,6 @@ export default function ProfilePage() {
     } catch(err) {
       setError("Logout failed");
     }
-    
   }
 
   async function handlePasswordChange(){
